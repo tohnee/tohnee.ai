@@ -1,0 +1,337 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1778667425518,
+  "projectRoot": "/Users/tc/Workspace/tohnee.ai",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "19.2.0",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.2.0",
+        "category": "frontend"
+      },
+      {
+        "name": "vite",
+        "version": "7.3.1",
+        "category": "build"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build 2>&1 | tail -10",
+    "testCommand": null,
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc -b && vite build",
+      "lint": "eslint .",
+      "preview": "vite preview"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": "type-based"
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs",
+      "public",
+      "src"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 3,
+      "lastAccessed": 1778667425502,
+      "keyFiles": [
+        "_redirects",
+        "favicon.svg",
+        "index.html"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1778667425505,
+      "keyFiles": []
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 2,
+      "lastAccessed": 1778667425505,
+      "keyFiles": [
+        "_redirects",
+        "favicon.svg"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 3,
+      "lastAccessed": 1778667425505,
+      "keyFiles": [
+        "App.tsx",
+        "index.css",
+        "main.tsx"
+      ]
+    },
+    "dist/assets": {
+      "path": "dist/assets",
+      "purpose": "Static assets",
+      "fileCount": 17,
+      "lastAccessed": 1778667425506,
+      "keyFiles": [
+        "AgentView-ckZWvtvt.js",
+        "Agents-x7517Qq5.js",
+        "ArticleView-7uQFavw0.js"
+      ]
+    },
+    "src/assets": {
+      "path": "src/assets",
+      "purpose": "Static assets",
+      "fileCount": 0,
+      "lastAccessed": 1778667425507,
+      "keyFiles": []
+    },
+    "src/components": {
+      "path": "src/components",
+      "purpose": "UI components",
+      "fileCount": 5,
+      "lastAccessed": 1778667425507,
+      "keyFiles": [
+        "ErrorBoundary.tsx",
+        "Layout.tsx",
+        "RouteFallback.tsx"
+      ]
+    },
+    "src/pages": {
+      "path": "src/pages",
+      "purpose": "Page components",
+      "fileCount": 9,
+      "lastAccessed": 1778667425507,
+      "keyFiles": [
+        "Agents.tsx",
+        "Company.tsx",
+        "Home.tsx"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src/pages/Try.tsx",
+      "accessCount": 12,
+      "lastAccessed": 1778723886929,
+      "type": "file"
+    },
+    {
+      "path": "src/components/Layout.tsx",
+      "accessCount": 10,
+      "lastAccessed": 1778723881354,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Agents.tsx",
+      "accessCount": 9,
+      "lastAccessed": 1778667503058,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Research.tsx",
+      "accessCount": 9,
+      "lastAccessed": 1778667504110,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/company/Blog.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667494168,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/company/Careers.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667494423,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/company/Charter.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667494708,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/content/AgentView.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667494993,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/content/ArticleView.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667495270,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/content/ModelView.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667495523,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Company.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667503314,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Models.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667503571,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/OPC.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1778667503858,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Home.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1778723886336,
+      "type": "file"
+    },
+    {
+      "path": "src/components/ErrorBoundary.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1778723887040,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/NotFound.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1778454106656,
+      "type": "file"
+    },
+    {
+      "path": "index.html",
+      "accessCount": 5,
+      "lastAccessed": 1778723875199,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/auth/Login.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1778723886383,
+      "type": "file"
+    },
+    {
+      "path": "src/pages/Search.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1778723886982,
+      "type": "file"
+    },
+    {
+      "path": "src/App.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1778723881417,
+      "type": "file"
+    },
+    {
+      "path": "src/index.css",
+      "accessCount": 3,
+      "lastAccessed": 1778723881230,
+      "type": "file"
+    },
+    {
+      "path": "src/main.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1778723881327,
+      "type": "file"
+    },
+    {
+      "path": "src/components/RouteFallback.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1778723886910,
+      "type": "file"
+    },
+    {
+      "path": "vite.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1777952574043,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1778723875130,
+      "type": "file"
+    },
+    {
+      "path": "src/components/WebGLBackground.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778723886289,
+      "type": "file"
+    },
+    {
+      "path": "src/components/SEO.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778723886635,
+      "type": "file"
+    },
+    {
+      "path": "public/favicon.svg",
+      "accessCount": 1,
+      "lastAccessed": 1777952194370,
+      "type": "file"
+    },
+    {
+      "path": "public/_redirects",
+      "accessCount": 1,
+      "lastAccessed": 1777952595016,
+      "type": "file"
+    },
+    {
+      "path": "REVIEWS.md",
+      "accessCount": 1,
+      "lastAccessed": 1778724181417,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
