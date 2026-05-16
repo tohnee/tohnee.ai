@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Instrument Sans", "Söhne", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: "Suisse Int'l Mono", "Menlo", "Monaco", "Courier New", monospace;
+}
+
+@layer base {
+  html {
+    @apply bg-white;
+  }
+
+  body {
+    @apply bg-white text-black antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+}
+
+/* Subtle grain texture overlay */
+@utility grain {
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+}
+
+/* Custom Utilities */
+@utility container-custom {
+  @apply max-w-[1400px] mx-auto px-6 md:px-12;
+}
+
+@utility link-hover {
+  @apply hover:text-gray-600 transition-colors duration-200;
+}
