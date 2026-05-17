@@ -24,9 +24,18 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # Use /tohnee.ai/ for project site, / for custom domain
+      - name: Detect base path
+        id: base
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "base=/" >> $GITHUB_OUTPUT
+          else
+            echo "base=/tohnee.ai/" >> $GITHUB_OUTPUT
+          fi
       - run: npm run build
         env:
-          VITE_BASE: /tohnee.ai/
+          VITE_BASE: ${{ steps.base.outputs.base }}
       # SPA fallback: copy index.html to 404.html for client-side routing
       - run: cp dist/index.html dist/404.html
       - name: Setup Pages
