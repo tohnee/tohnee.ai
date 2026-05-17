@@ -1,10 +1,6 @@
-name = "tohnee-ai"
+# Cloudflare Pages project: tohnee-ai
+# Compat date for Workers features (not used by Pages, but required field)
 compatibility_date = "2026-05-01"
 
-pages_build_output_dir = "dist"
-
-[env.production]
-routes = [{ pattern = "tohnee.ai", custom_domain = true }]
-
-[build]
-command = "npm run build"
+# Build output dir is passed via CLI: `wrangler pages deploy dist`
+# Custom domain is configured in Cloudflare Dashboard: tohnee.ai
