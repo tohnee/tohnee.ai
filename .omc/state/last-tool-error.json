@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"git diff --name-only HEAD 2>/dev/null\",\"description\":\"Check all open changes\"}",
-  "error": "Exit code 129",
-  "timestamp": "2026-05-10T23:03:26.589Z",
-  "retry_count": 1
-}
