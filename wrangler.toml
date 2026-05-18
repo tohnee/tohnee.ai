@@ -1,6 +1,4 @@
-# Cloudflare Pages project: tohnee-ai
-# Compat date for Workers features (not used by Pages, but required field)
+# Cloudflare Pages project
+name = "tohnee-ai"
 compatibility_date = "2026-05-01"
-
-# Build output dir is passed via CLI: `wrangler pages deploy dist`
-# Custom domain is configured in Cloudflare Dashboard: tohnee.ai
+pages_build_output_dir = "dist"
