@@ -1,7 +1,11 @@
 #!/bin/bash
 # Batch generate images for tohnee.ai website - Using 1K for faster generation
 
-export GEMINI_API_KEY="REDACTED_GEMINI_API_KEY"
+if [[ -z "${GEMINI_API_KEY:-}" ]]; then
+  echo "✗ 未设置 GEMINI_API_KEY 环境变量" >&2
+  echo "  用法: GEMINI_API_KEY=<key> $0" >&2
+  exit 1
+fi
 SCRIPT="/Users/tc/.local/share/fnm/node-versions/v24.13.0/installation/lib/node_modules/openclaw/skills/nano-banana-pro/scripts/generate_image.py"
 OUTPUT_DIR="/Users/tc/Workspace/tohnee.ai/public/images"
 
@@ -14,13 +18,13 @@ generate_image() {
     local name=$1
     local prompt=$2
     local filename=$3
-    
+
     echo "Generating: $name"
     uv run --with google-genai --with pillow python "$SCRIPT" \
         --prompt "$prompt" \
         --filename "$filename" \
         --resolution 1K 2>&1
-    
+
     if [ -f "$filename" ]; then
         echo "✓ Success: $name"
     else

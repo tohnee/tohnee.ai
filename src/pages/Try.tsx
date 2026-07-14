@@ -1,7 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { Send, User, Bot, Settings, AlertCircle, Sparkles } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Send, User, Bot, AlertCircle, Sparkles, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 const suggestions = [
   'What is Tohnee-7B?',
@@ -10,14 +16,21 @@ const suggestions = [
   'Tell me a fun fact',
 ];
 
+const makeId = () =>
+  `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
+const MAX_INPUT_LENGTH = 2000;
+
 const Try = () => {
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
-    { role: 'assistant', content: 'Hello! I am Tohnee-7B (Powered by MiniMax). How can I help you today?' }
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: makeId(),
+      role: 'assistant',
+      content: 'Hello! I am Tohnee-7B. How can I help you today?',
+    },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showConfig, setShowConfig] = useState(false);
-  const [apiKey, setApiKey] = useState(localStorage.getItem('minimax_api_key') || '');
   const [error, setError] = useState('');
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -35,110 +48,94 @@ const Try = () => {
     }
   }, [input]);
 
-  const saveConfig = () => {
-    localStorage.setItem('minimax_api_key', apiKey);
-    setShowConfig(false);
-  };
+  const handleSubmit = useCallback(
+    async (e?: React.FormEvent) => {
+      if (e) e.preventDefault();
+      const userMessage = input.trim();
+      if (!userMessage || isLoading) return;
 
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!input.trim() || isLoading) return;
+      const userMsg: Message = { id: makeId(), role: 'user', content: userMessage };
+      const recentMessages = [...messages, userMsg].slice(-20);
+      setInput('');
+      setIsLoading(true);
+      setError('');
 
-    if (!apiKey) {
-      setShowConfig(true);
-      setError('Please enter your MiniMax API Key first.');
-      return;
-    }
+      setMessages((prev) => [...prev, userMsg]);
 
-    const userMessage = input.trim();
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setInput('');
-    setIsLoading(true);
-    setError('');
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: recentMessages.map((m) => ({ role: m.role, content: m.content })),
+          }),
+        });
 
-    try {
-      const response = await fetch('https://api.minimax.chat/v1/text/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: 'MiniMax-Text-01',
-          messages: [
-            { role: 'system', content: 'You are Tohnee-7B, a helpful AI assistant created by Tohnee AI Research Lab. You are helpful, creative, and concise.' },
-            ...messages.map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: userMessage }
-          ],
-          stream: false
-        })
-      });
+        const data = await response.json().catch(() => ({}));
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.base_resp?.status_msg || errData.error?.message || `API Error: ${response.status}`);
+        if (!response.ok) {
+          const errMsg =
+            (data && typeof data.error === 'string' && data.error) ||
+            `Request failed (${response.status})`;
+          throw new Error(errMsg);
+        }
+
+        const content =
+          typeof data.content === 'string' && data.content.length > 0
+            ? data.content
+            : 'Sorry, I could not generate a response.';
+
+        setMessages((prev) => [
+          ...prev,
+          { id: makeId(), role: 'assistant', content },
+        ]);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to connect.';
+        setError(errorMessage);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: makeId(),
+            role: 'assistant',
+            content: `Error: ${errorMessage}`,
+          },
+        ]);
+      } finally {
+        setIsLoading(false);
       }
-
-      const data = await response.json();
-      const assistantMessage = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
-
-      setMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }]);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to connect to MiniMax API.';
-      setError(errorMessage);
-      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${errorMessage} Please check your API key.` }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [input, isLoading, messages],
+  );
 
   const handleSuggestionClick = (text: string) => {
     setInput(text);
     textareaRef.current?.focus();
   };
 
-  const hasUserMessages = messages.some(m => m.role === 'user');
+  const hasUserMessages = messages.some((m) => m.role === 'user');
 
   return (
     <div className="container-custom py-12 h-[calc(100vh-80px)] flex flex-col relative">
-      <SEO title="Try Tohnee-7B" description="Try Tohnee-7B — a highly efficient 7B model for reasoning, coding, and autonomous agent workflows." path="/try" />
+      <SEO
+        title="Try Tohnee-7B"
+        description="Try Tohnee-7B - a highly efficient 7B model for reasoning, coding, and autonomous agent workflows."
+        path="/try"
+      />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-medium tracking-tight">Try Tohnee-7B</h1>
-        <button
-          onClick={() => setShowConfig(!showConfig)}
-          className="p-2 text-gray-500 hover:text-black transition-colors rounded-lg hover:bg-gray-100"
-          title="Configure API Key"
-        >
-          <Settings size={20} />
-        </button>
+        <div className="flex items-center gap-2 text-xs text-gray-400">
+          <Shield size={14} />
+          <span>Server-side proxied</span>
+        </div>
       </div>
 
-      {showConfig && (
-        <div className="absolute top-24 right-8 z-10 w-80 bg-white border border-gray-200 shadow-xl rounded-xl p-6">
-          <h3 className="font-medium mb-4">API Configuration</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">MiniMax API Key</label>
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="sk-..."
-                className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
-              />
-            </div>
-            <p className="text-xs text-gray-500">
-              Your API key is stored locally in your browser.
-            </p>
-            <button
-              onClick={saveConfig}
-              className="w-full bg-black text-white py-2 rounded-lg text-sm hover:bg-gray-800 transition-colors"
-            >
-              Save Settings
-            </button>
-          </div>
-        </div>
-      )}
+      <div className="mb-4 p-3 bg-gray-50 rounded-lg flex items-start gap-2 text-xs text-gray-500">
+        <Sparkles size={14} className="mt-0.5 flex-shrink-0" />
+        <span>
+          Conversations are processed by Tohnee-7B via a server-side proxy. Your messages are sent
+          to our model provider to generate responses. Do not share sensitive information.
+        </span>
+      </div>
 
       {error && (
         <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm">
@@ -149,22 +146,27 @@ const Try = () => {
 
       <div className="flex-1 overflow-y-auto mb-8 space-y-8 pr-4">
         <AnimatePresence initial={false}>
-          {messages.map((msg, i) => (
+          {messages.map((msg) => (
             <motion.div
-              key={i}
+              key={msg.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0, 1] as const }}
               className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                msg.role === 'assistant' ? 'bg-black text-white' : 'bg-gray-200'
-              }`}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  msg.role === 'assistant' ? 'bg-black text-white' : 'bg-gray-200'
+                }`}
+              >
                 {msg.role === 'assistant' ? <Bot size={16} /> : <User size={16} />}
               </div>
-              <div className={`max-w-[80%] p-4 rounded-2xl whitespace-pre-wrap ${
-                msg.role === 'assistant' ? 'bg-gray-50' : 'bg-black text-white'
-              }`}>
+              <div
+                className={`max-w-[80%] p-4 rounded-2xl whitespace-pre-wrap ${
+                  msg.role === 'assistant' ? 'bg-gray-50' : 'bg-black text-white'
+                }`}
+              >
                 {msg.content}
               </div>
             </motion.div>
@@ -231,14 +233,15 @@ const Try = () => {
         <textarea
           ref={textareaRef}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value.slice(0, MAX_INPUT_LENGTH))}
           placeholder="Message Tohnee-7B..."
           disabled={isLoading}
           rows={1}
+          maxLength={MAX_INPUT_LENGTH}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              handleSubmit();
+              void handleSubmit();
             }
           }}
           className="w-full p-4 pr-12 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent shadow-sm disabled:opacity-50 disabled:bg-gray-50 resize-none overflow-y-auto"
@@ -251,6 +254,11 @@ const Try = () => {
           <Send size={16} />
         </button>
       </form>
+      {input.length > MAX_INPUT_LENGTH * 0.8 && (
+        <p className="text-right text-xs text-gray-400 mt-1">
+          {input.length}/{MAX_INPUT_LENGTH}
+        </p>
+      )}
     </div>
   );
 };

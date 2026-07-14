@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy",
-    "deploy:prod": "npm run build && wrangler pages deploy --branch main"
+    "deploy:prod": "npm run build && wrangler pages deploy --branch main",
+    "typecheck:functions": "tsc -p tsconfig.functions.json --noEmit"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -27,6 +28,7 @@
     "three": "^0.183.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250712.0",
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",

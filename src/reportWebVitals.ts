@@ -11,7 +11,8 @@ const reportWebVitals = () => {
             console.log(`[Perf] FID: ${firstInput.processingStart - firstInput.startTime}ms`);
           }
           if (entry.entryType === 'layout-shift') {
-            console.log(`[Perf] CLS: ${(entry as any).value}`);
+            const layoutShift = entry as PerformanceEntry & { value: number };
+            console.log(`[Perf] CLS: ${layoutShift.value}`);
           }
         }
       });
